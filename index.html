@@ -289,6 +289,16 @@ user-select: none
 <body>
 <script>
 (function(){const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';document.head.appendChild(s);})();
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => {
+if (e.key === 'F12' || 
+(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+(e.ctrlKey && e.key === 'U') ||
+(e.ctrlKey && e.key === 'S')) {
+e.preventDefault();
+return false;
+}
+});
 </script>
 
 <div class="login-overlay" id="loginOverlay">
@@ -2245,9 +2255,9 @@ function calculateScore(){
   scores.s3=ps_s+b_s;
   // 4. Disc brake design (20)
   const Dr=getN('drum_D')/state.Dw; const D_ok=Dr>=0.70&&Dr<=0.83; const D_s=D_ok?8:(Dr>=0.65&&Dr<=0.85?5:2);
-  scores.details.push({name:'制动盘直径比 D/Dw',standard:'0.70~0.79',actual:`${fmt(Dr,3)}`,score:D_s,max:8});
-  const hd=getN('h_disc'); const h_ok=hd>=10&&hd<=20; const h_s=h_ok?6:(hd>=8?4:2);
-  scores.details.push({name:'制动盘厚度',standard:'10~20 mm（实心盘）',actual:`${hd} mm`,score:h_s,max:6});
+  scores.details.push({name:'制动盘直径比 D/Dw',standard:'乘用车0.64~0.74；商用车0.70~0.83',actual:`${fmt(Dr,3)}`,score:D_s,max:8});
+  const hd=getN('drum_delta_wall'); const h_ok=hd>=10&&hd<=20; const h_s=h_ok?6:(hd>=8?4:2);
+  scores.details.push({name:'制动鼓壁厚',standard:'10~20 mm',actual:`${hd} mm`,score:h_s,max:6});
   const f_ok=state.f>=0.30&&state.f<=0.50; const f_s=f_ok?6:(state.f>=0.25?4:2);
   scores.details.push({name:'摩擦因数',standard:'0.30~0.50',actual:`${state.f}`,score:f_s,max:6});
   scores.s4=D_s+h_s+f_s;
@@ -2806,15 +2816,6 @@ function simSwitchTab(idx){
   setTimeout(()=>simDraw(idx),10);
 }
 
-document.addEventListener('keydown', e => {
-if (e.key === 'F12' || 
-(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
-(e.ctrlKey && e.key === 'U') ||
-(e.ctrlKey && e.key === 'S')) {
-e.preventDefault();
-return false;
-}
-});
 </script>
 <script>
   document.addEventListener('contextmenu', e => e.preventDefault());
